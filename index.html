@@ -1,1 +1,552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NUSACYBERA — Pelatihan Trading Forex</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--cyan:#00f5ff;--cyan2:#00b4d8;--gold:#ffd166;--gold2:#f4a51b;--green:#06ffa5;--red:#ff4d6d;--dark:#010810;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{min-height:100vh;background:var(--dark);font-family:'Rajdhani',sans-serif;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.02) 1px,transparent 1px);background-size:40px 40px;z-index:0;animation:gridMove 20s linear infinite;pointer-events:none;}
+  @keyframes gridMove{0%{background-position:0 0;}100%{background-position:40px 40px;}}
+  .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(transparent,rgba(0,245,255,0.05),transparent);animation:scan 6s linear infinite;pointer-events:none;z-index:5;}
+  @keyframes scan{0%{transform:translateY(-10px);}100%{transform:translateY(110vh);}}
+  .navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(1,8,16,0.95);border-bottom:1px solid rgba(0,245,255,0.1);backdrop-filter:blur(12px);padding:0 16px;display:flex;align-items:center;height:56px;gap:8px;overflow-x:auto;scrollbar-width:none;}
+  .navbar::-webkit-scrollbar{display:none;}
+  .nav-brand{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex-shrink:0;margin-right:8px;}
+  .nav-tab{flex-shrink:0;padding:6px 12px;border-radius:20px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(0,245,255,0.4);cursor:pointer;transition:all 0.2s;border:1px solid transparent;white-space:nowrap;}
+  .nav-tab:hover,.nav-tab.active{color:var(--cyan);border-color:rgba(0,245,255,0.3);background:rgba(0,245,255,0.08);}
+  .page{display:none;position:relative;z-index:1;min-height:100vh;padding:72px 14px 40px;}
+  .page.active{display:block;animation:fadeIn 0.4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .container{max-width:520px;margin:0 auto;}
+  .page-header{text-align:center;margin-bottom:20px;}
+  .page-title{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:3px;color:var(--cyan);margin-bottom:4px;}
+  .page-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:3px;}
+  .card{background:rgba(7,20,40,0.9);border:1px solid rgba(0,245,255,0.12);border-radius:14px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+  .card.gold-card{border-color:rgba(255,209,102,0.2);}
+  .card.gold-card::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  .card.green-card{border-color:rgba(6,255,165,0.2);}
+  .card.green-card::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+  .card.red-card{border-color:rgba(255,77,109,0.2);}
+  .card.red-card::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+  .card-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--cyan);margin-bottom:12px;}
+  .card-title.gold{color:var(--gold);}
+  .card-title.green{color:var(--green);}
+  .card-title.red{color:var(--red);}
+  .divider{display:flex;align-items:center;gap:8px;margin:14px 0;}
+  .div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,0.2),transparent);}
+  .div-dot{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 6px var(--gold);}
+  .disclaimer{background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,209,102,0.7);letter-spacing:1px;line-height:1.8;text-align:center;}
+  .pairs-grid{display:flex;flex-direction:column;gap:8px;}
+  .pair-row{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,245,255,0.08);border-radius:10px;padding:10px 12px;transition:all 0.2s;}
+  .pair-row:hover{border-color:rgba(0,245,255,0.2);}
+  .pair-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:#e8f4ff;min-width:80px;}
+  .pair-price{font-family:'Share Tech Mono',monospace;font-size:14px;flex:1;text-align:center;}
+  .pair-price.up{color:var(--green);}
+  .pair-price.down{color:var(--red);}
+  .pair-change{font-family:'Share Tech Mono',monospace;font-size:10px;min-width:60px;text-align:right;}
+  .pair-change.up{color:var(--green);}
+  .pair-change.down{color:var(--red);}
+  .pair-arrow{font-size:14px;}
+  .mini-chart{width:100%;height:60px;margin-top:8px;}
+  .last-update{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(0,245,255,0.3);text-align:center;margin-top:8px;letter-spacing:2px;}
+  .edu-item{margin-bottom:12px;}
+  .edu-num{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--gold);letter-spacing:2px;margin-bottom:4px;}
+  .edu-title{font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:6px;letter-spacing:1px;}
+  .edu-text{font-family:'Rajdhani',sans-serif;font-size:13px;color:#8ab4c8;line-height:1.7;}
+  .edu-highlight{background:rgba(0,245,255,0.06);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:8px 12px;margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(0,245,255,0.7);letter-spacing:1px;}
+  .term-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .term-card{background:rgba(0,0,0,0.3);border:1px solid rgba(0,245,255,0.1);border-radius:8px;padding:10px;}
+  .term-name{font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:1px;margin-bottom:4px;}
+  .term-desc{font-family:'Rajdhani',sans-serif;font-size:12px;color:#8ab4c8;line-height:1.5;}
+  .calc-form{display:flex;flex-direction:column;gap:10px;}
+  .calc-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,245,255,0.5);letter-spacing:2px;margin-bottom:4px;display:block;}
+  .calc-input{width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(0,245,255,0.2);border-radius:8px;padding:10px 14px;color:#e8f4ff;font-family:'Share Tech Mono',monospace;font-size:13px;outline:none;}
+  .calc-input:focus{border-color:rgba(0,245,255,0.4);}
+  .calc-select{width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(0,245,255,0.2);border-radius:8px;padding:10px 14px;color:#e8f4ff;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;cursor:pointer;}
+  .calc-btn{width:100%;padding:12px;border-radius:10px;border:1px solid var(--cyan);background:rgba(0,245,255,0.08);color:var(--cyan);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s;}
+  .calc-btn:hover{background:rgba(0,245,255,0.15);}
+  .calc-result{background:rgba(0,0,0,0.4);border:1px solid rgba(6,255,165,0.2);border-radius:10px;padding:14px;margin-top:10px;display:none;}
+  .calc-result.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-family:'Share Tech Mono',monospace;font-size:11px;}
+  .result-label{color:rgba(0,245,255,0.4);letter-spacing:1px;}
+  .result-val{color:#e8f4ff;font-weight:700;}
+  .result-val.profit{color:var(--green);}
+  .result-val.loss{color:var(--red);}
+  .signal-card{background:rgba(0,0,0,0.3);border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid;}
+  .signal-card.buy{border-color:rgba(6,255,165,0.3);background:rgba(6,255,165,0.04);}
+  .signal-card.sell{border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.04);}
+  .signal-card.wait{border-color:rgba(255,209,102,0.3);background:rgba(255,209,102,0.04);}
+  .signal-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .signal-badge{font-family:'Orbitron',monospace;font-size:10px;font-weight:900;padding:4px 12px;border-radius:6px;letter-spacing:2px;}
+  .signal-badge.buy{background:rgba(6,255,165,0.15);color:var(--green);border:1px solid rgba(6,255,165,0.3);}
+  .signal-badge.sell{background:rgba(255,77,109,0.15);color:var(--red);border:1px solid rgba(255,77,109,0.3);}
+  .signal-badge.wait{background:rgba(255,209,102,0.15);color:var(--gold);border:1px solid rgba(255,209,102,0.3);}
+  .signal-pair{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;color:#e8f4ff;}
+  .signal-time{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(0,245,255,0.3);margin-left:auto;letter-spacing:1px;}
+  .signal-details{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+  .signal-detail{text-align:center;}
+  .signal-detail-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(0,245,255,0.3);letter-spacing:1px;margin-bottom:2px;}
+  .signal-detail-val{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#e8f4ff;}
+  .signal-detail-val.green{color:var(--green);}
+  .signal-detail-val.red{color:var(--red);}
+  .signal-reason{font-family:'Rajdhani',sans-serif;font-size:12px;color:#8ab4c8;margin-top:8px;line-height:1.6;border-top:1px solid rgba(0,245,255,0.08);padding-top:8px;}
+  .signal-disclaimer{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(255,209,102,0.4);text-align:center;margin-top:10px;letter-spacing:1px;}
+  .session-row{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 14px;margin-bottom:8px;border:1px solid rgba(0,245,255,0.06);position:relative;overflow:hidden;}
+  .session-row.active-session{border-color:rgba(6,255,165,0.3);background:rgba(6,255,165,0.04);}
+  .session-row.active-session::before{content:'AKTIF';position:absolute;top:6px;right:10px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--green);letter-spacing:2px;}
+  .session-flag{font-size:24px;flex-shrink:0;}
+  .session-info{flex:1;}
+  .session-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:#e8f4ff;letter-spacing:1px;}
+  .session-time{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,245,255,0.4);margin-top:2px;letter-spacing:1px;}
+  .session-pairs{font-family:'Rajdhani',sans-serif;font-size:11px;color:#8ab4c8;margin-top:3px;}
+  .session-vol{font-family:'Share Tech Mono',monospace;font-size:9px;text-align:right;flex-shrink:0;}
+  .vol-bar-wrap{width:40px;height:4px;background:rgba(0,245,255,0.1);border-radius:2px;margin-top:4px;}
+  .vol-bar{height:100%;border-radius:2px;background:var(--cyan);}
+  .wib-clock{background:rgba(0,0,0,0.4);border:1px solid rgba(0,245,255,0.1);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .wib-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(0,245,255,0.3);letter-spacing:2px;}
+  .wib-time{font-family:'Orbitron',monospace;font-size:18px;color:var(--cyan);letter-spacing:2px;}
+  .mentor-card{background:linear-gradient(135deg,rgba(255,209,102,0.06),rgba(7,20,40,0.95));border:1px solid rgba(255,209,102,0.2);border-radius:12px;padding:14px;margin-bottom:12px;}
+  .mentor-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .mentor-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:16px;font-weight:900;flex-shrink:0;}
+  .mentor-av.owner{border:2px solid var(--gold);color:var(--gold);background:rgba(255,209,102,0.08);}
+  .mentor-av.investor{border:2px solid var(--cyan);color:var(--cyan);background:rgba(0,245,255,0.06);}
+  .mentor-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:#e8f4ff;}
+  .mentor-role{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;margin-top:2px;}
+  .mentor-role.gold{color:var(--gold);}
+  .mentor-role.cyan{color:var(--cyan);}
+  .mentor-desc{font-family:'Rajdhani',sans-serif;font-size:13px;color:#8ab4c8;line-height:1.6;}
+  .footer{text-align:center;padding:16px 0;margin-top:8px;}
+  .footer-brand{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .footer-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(0,245,255,0.2);letter-spacing:2px;margin-top:3px;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
 
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-brand">NC FOREX</div>
+  <div class="nav-tab active" onclick="showPage('harga')">📈 Harga</div>
+  <div class="nav-tab" onclick="showPage('edukasi')">📚 Edukasi</div>
+  <div class="nav-tab" onclick="showPage('kalkulator')">🧮 Kalkulator</div>
+  <div class="nav-tab" onclick="showPage('sinyal')">🎯 Sinyal</div>
+  <div class="nav-tab" onclick="showPage('sesi')">🕐 Sesi</div>
+</div>
+
+<!-- PAGE: HARGA -->
+<div class="page active" id="page-harga">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">📈 HARGA FOREX LIVE</div>
+      <div class="page-sub">◈ UPDATE OTOMATIS SETIAP 30 DETIK ◈</div>
+    </div>
+    <div class="disclaimer">
+      🚨 PERINGATAN KERAS! 🚨<br/>
+      DATA HARGA DI SINI ADALAH <strong>SIMULASI EDUKASI SEMATA</strong><br/>
+      BUKAN DATA HARGA PASAR FOREX YANG SESUNGGUHNYA!<br/><br/>
+      ❌ JANGAN GUNAKAN DATA INI UNTUK TRADING NYATA!<br/>
+      ❌ NUSACYBERA TIDAK BERTANGGUNG JAWAB ATAS KERUGIAN APAPUN!<br/>
+      ✅ GUNAKAN PLATFORM BROKER RESMI UNTUK TRADING NYATA<br/>
+      ✅ FITUR INI GRATIS & MURNI UNTUK TUJUAN EDUKASI SAJA
+    </div>
+    <div class="card">
+      <div class="card-title">◈ MAJOR PAIRS ◈</div>
+      <div class="pairs-grid" id="pairsGrid"></div>
+      <div class="last-update" id="lastUpdate">MEMUAT DATA...</div>
+    </div>
+    <div class="card gold-card">
+      <div class="card-title gold">◈ GRAFIK MINI EUR/USD ◈</div>
+      <canvas class="mini-chart" id="chartCanvas"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">◈ INDEKS PASAR ◈</div>
+      <div class="pairs-grid" id="indexGrid"></div>
+    </div>
+    <div class="footer"><div class="footer-brand">NUSACYBERA</div><div class="footer-sub">PELATIHAN TRADING FOREX 🔥</div></div>
+  </div>
+</div>
+
+<!-- PAGE: EDUKASI -->
+<div class="page" id="page-edukasi">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">📚 EDUKASI FOREX</div>
+      <div class="page-sub">◈ BELAJAR DARI NOL SAMPAI BISA ◈</div>
+    </div>
+    <div class="card gold-card">
+      <div class="card-title gold">◈ APA ITU FOREX? ◈</div>
+      <div class="edu-text">Forex (Foreign Exchange) adalah pasar keuangan terbesar di dunia tempat mata uang diperdagangkan satu sama lain. Nilainya mencapai <strong style="color:var(--gold)">$7 triliun per hari!</strong> 🤯</div>
+      <div class="edu-highlight">💡 Forex buka 24 jam, 5 hari seminggu — dari Senin pagi hingga Sabtu pagi WIB</div>
+    </div>
+    <div class="card">
+      <div class="card-title">◈ ISTILAH DASAR FOREX ◈</div>
+      <div class="term-grid">
+        <div class="term-card"><div class="term-name">PIP</div><div class="term-desc">Unit terkecil pergerakan harga. 1 pip = 0.0001 untuk kebanyakan pair</div></div>
+        <div class="term-card"><div class="term-name">LOT</div><div class="term-desc">Satuan volume trading. 1 lot standar = 100.000 unit mata uang</div></div>
+        <div class="term-card"><div class="term-name">SPREAD</div><div class="term-desc">Selisih antara harga BID dan ASK. Biaya yang dibayar ke broker</div></div>
+        <div class="term-card"><div class="term-name">LEVERAGE</div><div class="term-desc">Modal pinjaman dari broker. 1:100 artinya modal x100 lebih besar</div></div>
+        <div class="term-card"><div class="term-name">BID</div><div class="term-desc">Harga jual terbaik yang ditawarkan pasar kepada kamu</div></div>
+        <div class="term-card"><div class="term-name">ASK</div><div class="term-desc">Harga beli terbaik yang ditawarkan pasar kepada kamu</div></div>
+        <div class="term-card"><div class="term-name">STOP LOSS</div><div class="term-desc">Batas kerugian maksimal yang kamu tetapkan sebelum entry</div></div>
+        <div class="term-card"><div class="term-name">TAKE PROFIT</div><div class="term-desc">Target keuntungan yang kamu tetapkan sebelum entry</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">◈ JENIS ANALISIS ◈</div>
+      <div class="edu-item">
+        <div class="edu-num">01 — ANALISIS TEKNIKAL</div>
+        <div class="edu-title">📊 Membaca Chart & Pola Harga</div>
+        <div class="edu-text">Analisis berdasarkan pergerakan harga historis menggunakan grafik, indikator & pola candlestick.</div>
+        <div class="edu-highlight">Tools: Moving Average, RSI, MACD, Bollinger Bands, Support & Resistance</div>
+      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
+      <div class="edu-item">
+        <div class="edu-num">02 — ANALISIS FUNDAMENTAL</div>
+        <div class="edu-title">📰 Membaca Berita & Data Ekonomi</div>
+        <div class="edu-text">Analisis berdasarkan kondisi ekonomi, kebijakan bank sentral, data inflasi, GDP & berita geopolitik.</div>
+        <div class="edu-highlight">Pantau: NFP, CPI, Interest Rate Decision, GDP, PMI</div>
+      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
+      <div class="edu-item" style="margin-bottom:0">
+        <div class="edu-num">03 — ANALISIS SENTIMEN</div>
+        <div class="edu-title">🧠 Membaca Psikologi Pasar</div>
+        <div class="edu-text">Analisis berdasarkan mood & sentimen pelaku pasar. Fear & Greed Index, COT Report.</div>
+        <div class="edu-highlight">Ingat: Market bisa irasional lebih lama dari yang kamu bayangkan!</div>
+      </div>
+    </div>
+    <div class="card green-card">
+      <div class="card-title green">◈ TIPS TRADING AMAN ◈</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--green);flex-shrink:0;">✅</span> Selalu gunakan <strong style="color:#fff">Stop Loss</strong> — jangan pernah trading tanpa SL!</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--green);flex-shrink:0;">✅</span> Risiko maksimal <strong style="color:#fff">1-2% per trade</strong> dari total modal</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--green);flex-shrink:0;">✅</span> Latihan di <strong style="color:#fff">akun demo</strong> dulu sebelum pakai uang asli</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--green);flex-shrink:0;">✅</span> Jangan trading saat <strong style="color:#fff">emosi</strong> — kalah jangan balas dendam!</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--red);flex-shrink:0;">❌</span> Jangan percaya <strong style="color:#fff">sinyal berbayar</strong> yang menjanjikan profit pasti!</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-size:13px;color:#c8dff0;line-height:1.6;"><span style="color:var(--red);flex-shrink:0;">❌</span> Jangan gunakan <strong style="color:#fff">uang pinjaman</strong> untuk trading!</div>
+      </div>
+    </div>
+    <div class="divider"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
+    <div style="font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-align:center;margin-bottom:12px;">◈ TIM MENTOR ◈</div>
+    <div class="mentor-card">
+      <div class="mentor-top"><div class="mentor-av owner">R</div><div><div class="mentor-name">Risky</div><div class="mentor-role gold">👑 OWNER & MENTOR TRADING</div></div></div>
+      <div class="mentor-desc">Owner NUSACYBERA yang sudah berpengalaman di dunia trading forex. Siap berbagi ilmu & pengalaman secara gratis! 💪🔥</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-top"><div class="mentor-av investor">A</div><div><div class="mentor-name">Arsyil</div><div class="mentor-role cyan">🌟 MEMBER & INVESTOR PROFESIONAL</div></div></div>
+      <div class="mentor-desc">Member NUSACYBERA yang di luar sana adalah investor luar biasa! Pengalaman & ilmu trading forexnya sudah teruji! 😎💰</div>
+    </div>
+    <div class="footer"><div class="footer-brand">NUSACYBERA</div><div class="footer-sub">EDUKASI TRADING GRATIS 🎓</div></div>
+  </div>
+</div>
+
+<!-- PAGE: KALKULATOR -->
+<div class="page" id="page-kalkulator">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">🧮 KALKULATOR FOREX</div>
+      <div class="page-sub">◈ HITUNG PROFIT & LOSS TRADING ◈</div>
+    </div>
+    <div class="card">
+      <div class="card-title">◈ KALKULATOR PROFIT/LOSS ◈</div>
+      <div class="calc-form">
+        <div><span class="calc-label">PAIR MATA UANG</span><select class="calc-select" id="calcPair"><option value="EURUSD">EUR/USD</option><option value="GBPUSD">GBP/USD</option><option value="USDJPY">USD/JPY</option><option value="AUDUSD">AUD/USD</option><option value="USDCAD">USD/CAD</option></select></div>
+        <div><span class="calc-label">TIPE ORDER</span><select class="calc-select" id="calcType"><option value="buy">BUY (Long)</option><option value="sell">SELL (Short)</option></select></div>
+        <div><span class="calc-label">UKURAN LOT</span><select class="calc-select" id="calcLot"><option value="0.01">0.01 (Micro Lot)</option><option value="0.1">0.10 (Mini Lot)</option><option value="1">1.00 (Standard Lot)</option></select></div>
+        <div><span class="calc-label">HARGA ENTRY</span><input class="calc-input" type="number" id="calcEntry" placeholder="contoh: 1.08500" step="0.00001"/></div>
+        <div><span class="calc-label">HARGA EXIT / TAKE PROFIT</span><input class="calc-input" type="number" id="calcExit" placeholder="contoh: 1.09000" step="0.00001"/></div>
+        <div><span class="calc-label">STOP LOSS</span><input class="calc-input" type="number" id="calcSL" placeholder="contoh: 1.08000" step="0.00001"/></div>
+        <button class="calc-btn" onclick="calculate()">🧮 HITUNG SEKARANG</button>
+      </div>
+      <div class="calc-result" id="calcResult">
+        <div class="result-row"><span class="result-label">PAIR</span><span class="result-val" id="rPair">—</span></div>
+        <div class="result-row"><span class="result-label">TIPE</span><span class="result-val" id="rType">—</span></div>
+        <div class="result-row"><span class="result-label">LOT SIZE</span><span class="result-val" id="rLot">—</span></div>
+        <div class="result-row"><span class="result-label">JARAK PIPS (TP)</span><span class="result-val" id="rPips">—</span></div>
+        <div class="result-row"><span class="result-label">JARAK PIPS (SL)</span><span class="result-val" id="rPipsSL">—</span></div>
+        <div class="result-row"><span class="result-label">ESTIMASI PROFIT</span><span class="result-val profit" id="rProfit">—</span></div>
+        <div class="result-row" style="margin-bottom:0"><span class="result-label">ESTIMASI LOSS</span><span class="result-val loss" id="rLoss">—</span></div>
+      </div>
+    </div>
+    <div class="card gold-card">
+      <div class="card-title gold">◈ KALKULATOR RISK/REWARD ◈</div>
+      <div class="calc-form">
+        <div><span class="calc-label">TOTAL MODAL (USD)</span><input class="calc-input" type="number" id="rrModal" placeholder="contoh: 1000"/></div>
+        <div><span class="calc-label">RISIKO PER TRADE (%)</span><select class="calc-select" id="rrRisk"><option value="1">1% (Konservatif)</option><option value="2">2% (Moderat)</option><option value="3">3% (Agresif)</option></select></div>
+        <button class="calc-btn" style="border-color:var(--gold);color:var(--gold);background:rgba(255,209,102,0.08);" onclick="calcRR()">💰 HITUNG RISIKO</button>
+      </div>
+      <div class="calc-result" id="rrResult">
+        <div class="result-row"><span class="result-label">MODAL</span><span class="result-val" id="rrModalVal">—</span></div>
+        <div class="result-row"><span class="result-label">RISIKO PER TRADE</span><span class="result-val loss" id="rrRiskVal">—</span></div>
+        <div class="result-row" style="margin-bottom:0"><span class="result-label">MAX KERUGIAN BERUNTUN</span><span class="result-val" id="rrMax">—</span></div>
+      </div>
+    </div>
+    <div class="footer"><div class="footer-brand">NUSACYBERA</div><div class="footer-sub">KALKULATOR TRADING FOREX 🧮</div></div>
+  </div>
+</div>
+
+<!-- PAGE: SINYAL -->
+<div class="page" id="page-sinyal">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">🎯 SINYAL TRADING</div>
+      <div class="page-sub">◈ HANYA UNTUK EDUKASI — BUKAN REKOMENDASI NYATA ◈</div>
+    </div>
+    <div class="disclaimer">
+      🚨 PERINGATAN KERAS! 🚨<br/>
+      SINYAL DI BAWAH INI ADALAH <strong>SIMULASI EDUKASI SEMATA!</strong><br/>
+      BUKAN REKOMENDASI TRADING NYATA DALAM KONDISI APAPUN!<br/><br/>
+      ❌ JANGAN GUNAKAN SINYAL INI UNTUK TRADING DENGAN UANG ASLI!<br/>
+      ❌ NUSACYBERA, RISKY & ARSYIL TIDAK BERTANGGUNG JAWAB ATAS KERUGIAN!<br/>
+      ✅ SELALU LAKUKAN ANALISIS SENDIRI SEBELUM TRADING<br/>
+      ✅ FITUR INI GRATIS & HANYA UNTUK TUJUAN PEMBELAJARAN
+    </div>
+    <div id="signalList"></div>
+    <div class="signal-disclaimer">🚨 SEMUA SINYAL DI ATAS ADALAH SIMULASI EDUKASI — BUKAN SINYAL TRADING NYATA — NUSACYBERA TIDAK BERTANGGUNG JAWAB ATAS KERUGIAN APAPUN 🚨</div>
+    <div class="footer"><div class="footer-brand">NUSACYBERA</div><div class="footer-sub">SINYAL EDUKASI FOREX 🎯</div></div>
+  </div>
+</div>
+
+<!-- PAGE: SESI -->
+<div class="page" id="page-sesi">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">🕐 SESI TRADING DUNIA</div>
+      <div class="page-sub">◈ JAM TRADING TERBAIK WIB ◈</div>
+    </div>
+    <div class="wib-clock">
+      <div class="wib-label">◈ JAM WIB SEKARANG</div>
+      <div class="wib-time" id="wibClock">--:--:--</div>
+    </div>
+    <div class="card">
+      <div class="card-title">◈ STATUS SESI AKTIF ◈</div>
+      <div id="sessionStatus" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green);letter-spacing:2px;text-align:center;padding:8px 0;">MEMUAT...</div>
+    </div>
+    <div id="sessionList"></div>
+    <div class="card gold-card">
+      <div class="card-title gold">◈ WAKTU TERBAIK TRADING ◈</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:rgba(6,255,165,0.06);border-radius:8px;padding:10px 12px;"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--green);letter-spacing:1px;margin-bottom:4px;">🔥 OVERLAP LONDON-NEW YORK</div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(6,255,165,0.6);">20:00 — 00:00 WIB</div><div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#8ab4c8;margin-top:4px;">Volatilitas tertinggi! EUR/USD, GBP/USD paling aktif. Volume trading terbesar!</div></div>
+        <div style="background:rgba(0,245,255,0.04);border-radius:8px;padding:10px 12px;"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--cyan);letter-spacing:1px;margin-bottom:4px;">💡 SESI LONDON</div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(0,245,255,0.5);">15:00 — 00:00 WIB</div><div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#8ab4c8;margin-top:4px;">Tren harian biasanya terbentuk di sini. Cocok untuk swing trading!</div></div>
+        <div style="background:rgba(255,209,102,0.04);border-radius:8px;padding:10px 12px;"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px;">⚠️ SESI ASIA</div><div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,209,102,0.5);">07:00 — 16:00 WIB</div><div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#8ab4c8;margin-top:4px;">Volatilitas rendah. Cocok untuk pair JPY. Hindari EUR/USD & GBP/USD!</div></div>
+      </div>
+    </div>
+    <div class="footer"><div class="footer-brand">NUSACYBERA</div><div class="footer-sub">JADWAL SESI TRADING DUNIA 🌍</div></div>
+  </div>
+</div>
+<script>
+// ── NAVIGATION ──
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const tabs=document.querySelectorAll('.nav-tab');
+  const map={'harga':0,'edukasi':1,'kalkulator':2,'sinyal':3,'sesi':4};
+  tabs[map[name]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── WIB CLOCK ──
+function pad(n){return String(n).padStart(2,'0');}
+function getWIB(){const now=new Date();return new Date(now.getTime()+now.getTimezoneOffset()*60000+7*3600000);}
+function updateClock(){
+  const wib=getWIB();
+  const el=document.getElementById('wibClock');
+  if(el)el.textContent=pad(wib.getHours())+':'+pad(wib.getMinutes())+':'+pad(wib.getSeconds());
+  if(typeof sessions!=='undefined')updateSessionStatus(wib.getHours());
+}
+
+// ── FOREX PRICES ──
+const basePrices={'EUR/USD':1.0823,'GBP/USD':1.2634,'USD/JPY':149.85,'AUD/USD':0.6512,'USD/CAD':1.3621,'USD/CHF':0.8891,'NZD/USD':0.5987};
+const indexBase={'Gold':2312.50,'Silver':27.45,'Oil':78.23};
+let currentPrices={...basePrices};
+let indexPrices={...indexBase};
+let priceHistory=Array.from({length:20},(_,i)=>1.0800+Math.sin(i*0.5)*0.003+Math.random()*0.002);
+
+function randomWalk(price,vol){return price+(Math.random()-0.5)*vol;}
+
+function updatePrices(){
+  Object.keys(currentPrices).forEach(pair=>{currentPrices[pair]=randomWalk(currentPrices[pair],pair.includes('JPY')?0.08:0.0008);});
+  Object.keys(indexPrices).forEach(idx=>{indexPrices[idx]=randomWalk(indexPrices[idx],idx==='Gold'?2.5:idx==='Silver'?0.15:0.4);});
+  priceHistory.push(currentPrices['EUR/USD']);
+  if(priceHistory.length>20)priceHistory.shift();
+  renderPairs();renderIndex();renderChart();
+  const lu=document.getElementById('lastUpdate');
+  if(lu)lu.textContent='TERAKHIR UPDATE: '+pad(getWIB().getHours())+':'+pad(getWIB().getMinutes())+':'+pad(getWIB().getSeconds())+' WIB';
+}
+
+function renderPairs(){
+  const grid=document.getElementById('pairsGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  Object.entries(currentPrices).forEach(([pair,price])=>{
+    const change=((price-basePrices[pair])/basePrices[pair]*100);
+    const isUp=change>=0;
+    const dp=pair.includes('JPY')?3:5;
+    grid.innerHTML+=`<div class="pair-row"><div class="pair-name">${pair}</div><div class="pair-price ${isUp?'up':'down'}">${price.toFixed(dp)}</div><div class="pair-change ${isUp?'up':'down'}">${isUp?'+':''}${change.toFixed(2)}%</div><div class="pair-arrow">${isUp?'▲':'▼'}</div></div>`;
+  });
+}
+
+function renderIndex(){
+  const grid=document.getElementById('indexGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  Object.entries(indexPrices).forEach(([name,price])=>{
+    const change=((price-indexBase[name])/indexBase[name]*100);
+    const isUp=change>=0;
+    grid.innerHTML+=`<div class="pair-row"><div class="pair-name">${name}</div><div class="pair-price ${isUp?'up':'down'}">${price.toFixed(2)}</div><div class="pair-change ${isUp?'up':'down'}">${isUp?'+':''}${change.toFixed(2)}%</div><div class="pair-arrow">${isUp?'▲':'▼'}</div></div>`;
+  });
+}
+
+function renderChart(){
+  const canvas=document.getElementById('chartCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth||300;canvas.height=60;
+  const w=canvas.width,h=canvas.height;
+  const min=Math.min(...priceHistory),max=Math.max(...priceHistory);
+  const range=max-min||0.001;
+  ctx.clearRect(0,0,w,h);
+  const grad=ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,'rgba(0,245,255,0.15)');grad.addColorStop(1,'rgba(0,245,255,0)');
+  ctx.beginPath();
+  priceHistory.forEach((p,i)=>{const x=(i/(priceHistory.length-1))*w;const y=h-((p-min)/range)*(h*0.8)-h*0.1;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();
+  priceHistory.forEach((p,i)=>{const x=(i/(priceHistory.length-1))*w;const y=h-((p-min)/range)*(h*0.8)-h*0.1;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.strokeStyle='#00f5ff';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+// ── KALKULATOR ──
+function calculate(){
+  const pair=document.getElementById('calcPair').value;
+  const type=document.getElementById('calcType').value;
+  const lot=parseFloat(document.getElementById('calcLot').value);
+  const entry=parseFloat(document.getElementById('calcEntry').value);
+  const exit=parseFloat(document.getElementById('calcExit').value);
+  const sl=parseFloat(document.getElementById('calcSL').value);
+  if(!entry||!exit||!sl){alert('Isi semua field dulu ya fam! 😊');return;}
+  const isJPY=pair.includes('JPY');
+  const pipSize=isJPY?0.01:0.0001;
+  const pipValue=isJPY?(lot*100000*pipSize)/entry:(lot*100000*pipSize);
+  let pipsTP,pipsSL;
+  if(type==='buy'){pipsTP=(exit-entry)/pipSize;pipsSL=(entry-sl)/pipSize;}
+  else{pipsTP=(entry-exit)/pipSize;pipsSL=(sl-entry)/pipSize;}
+  const profit=pipsTP*pipValue;
+  const loss=pipsSL*pipValue;
+  document.getElementById('rPair').textContent=pair;
+  document.getElementById('rType').textContent=type.toUpperCase();
+  document.getElementById('rLot').textContent=lot+' Lot';
+  document.getElementById('rPips').textContent=Math.abs(pipsTP).toFixed(1)+' pips';
+  document.getElementById('rPipsSL').textContent=Math.abs(pipsSL).toFixed(1)+' pips';
+  document.getElementById('rProfit').textContent='$'+Math.abs(profit).toFixed(2);
+  document.getElementById('rLoss').textContent='-$'+Math.abs(loss).toFixed(2);
+  document.getElementById('calcResult').classList.add('show');
+}
+
+function calcRR(){
+  const modal=parseFloat(document.getElementById('rrModal').value);
+  const risk=parseFloat(document.getElementById('rrRisk').value)/100;
+  if(!modal){alert('Isi modal dulu ya fam! 😊');return;}
+  const riskAmt=modal*risk;
+  document.getElementById('rrModalVal').textContent='$'+modal.toFixed(2);
+  document.getElementById('rrRiskVal').textContent='-$'+riskAmt.toFixed(2)+' ('+(risk*100)+'%)';
+  document.getElementById('rrMax').textContent='10x loss = -$'+(riskAmt*10).toFixed(2);
+  document.getElementById('rrResult').classList.add('show');
+}
+
+// ── SINYAL ──
+const signals=[
+  {pair:'EUR/USD',type:'buy',entry:'1.0820',tp:'1.0870',sl:'1.0790',reason:'Harga memantul dari support kuat di 1.0800. RSI oversold di 28. Potensi reversal ke atas menuju resistance 1.0870.',time:'Edukasi'},
+  {pair:'GBP/USD',type:'sell',entry:'1.2640',tp:'1.2580',sl:'1.2670',reason:'Harga ditolak resistance di 1.2650. MACD bearish crossover. Potensi turun ke support 1.2580.',time:'Edukasi'},
+  {pair:'USD/JPY',type:'wait',entry:'149.80',tp:'150.50',sl:'149.20',reason:'Harga sedang ranging antara 149.20-150.20. Tunggu breakout yang jelas sebelum masuk posisi.',time:'Edukasi'},
+  {pair:'AUD/USD',type:'buy',entry:'0.6510',tp:'0.6560',sl:'0.6480',reason:'Double bottom terbentuk di 0.6490. Volume meningkat. Konfirmasi bullish reversal pattern.',time:'Edukasi'},
+];
+
+function renderSignals(){
+  const list=document.getElementById('signalList');
+  if(!list)return;
+  list.innerHTML='';
+  signals.forEach(s=>{
+    list.innerHTML+=`<div class="signal-card ${s.type}">
+      <div class="signal-top">
+        <div class="signal-badge ${s.type}">${s.type==='buy'?'▲ BUY':s.type==='sell'?'▼ SELL':'⏸ WAIT'}</div>
+        <div class="signal-pair">${s.pair}</div>
+        <div class="signal-time">${s.time}</div>
+      </div>
+      <div class="signal-details">
+        <div class="signal-detail"><div class="signal-detail-label">ENTRY</div><div class="signal-detail-val">${s.entry}</div></div>
+        <div class="signal-detail"><div class="signal-detail-label">TAKE PROFIT</div><div class="signal-detail-val green">${s.tp}</div></div>
+        <div class="signal-detail"><div class="signal-detail-label">STOP LOSS</div><div class="signal-detail-val red">${s.sl}</div></div>
+      </div>
+      <div class="signal-reason">💡 ${s.reason}</div>
+    </div>`;
+  });
+}
+
+// ── SESI TRADING ──
+const sessions=[
+  {flag:'🇳🇿',name:'Sesi Sydney',open:5,close:14,pairs:'AUD/USD, NZD/USD, AUD/JPY',vol:30},
+  {flag:'🇯🇵',name:'Sesi Tokyo',open:7,close:16,pairs:'USD/JPY, EUR/JPY, AUD/JPY',vol:45},
+  {flag:'🇬🇧',name:'Sesi London',open:15,close:24,pairs:'EUR/USD, GBP/USD, EUR/GBP',vol:90},
+  {flag:'🇺🇸',name:'Sesi New York',open:20,close:5,pairs:'EUR/USD, USD/CAD, USD/CHF',vol:85},
+];
+
+function renderSessions(){
+  const list=document.getElementById('sessionList');
+  if(!list)return;
+  list.innerHTML='';
+  const h=getWIB().getHours();
+  sessions.forEach(s=>{
+    let isActive=false;
+    if(s.open<s.close)isActive=h>=s.open&&h<s.close;
+    else isActive=h>=s.open||h<s.close;
+    const openStr=pad(s.open)+':00 WIB';
+    const closeStr=s.close===24?'00:00 WIB':pad(s.close)+':00 WIB';
+    list.innerHTML+=`<div class="session-row ${isActive?'active-session':''}">
+      <div class="session-flag">${s.flag}</div>
+      <div class="session-info">
+        <div class="session-name">${s.name}</div>
+        <div class="session-time">${openStr} — ${closeStr}</div>
+        <div class="session-pairs">${s.pairs}</div>
+      </div>
+      <div class="session-vol">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(0,245,255,0.3);">VOL</div>
+        <div class="vol-bar-wrap"><div class="vol-bar" style="width:${s.vol}%"></div></div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${isActive?'var(--green)':'rgba(0,245,255,0.3)'};">${s.vol}%</div>
+      </div>
+    </div>`;
+  });
+}
+
+function updateSessionStatus(h){
+  const el=document.getElementById('sessionStatus');
+  if(!el)return;
+  const active=[];
+  if(h>=5&&h<14)active.push('🇳🇿 Sydney');
+  if(h>=7&&h<16)active.push('🇯🇵 Tokyo');
+  if(h>=15)active.push('🇬🇧 London');
+  if(h>=20||h<5)active.push('🇺🇸 New York');
+  if(h>=20&&h<24)active.push('🔥 OVERLAP London-NY');
+  el.textContent=active.length?active.join(' • '):'🌙 Pasar Sepi — Tunggu Sesi London (15:00 WIB)';
+  renderSessions();
+}
+
+// ── INIT ──
+window.addEventListener('load',function(){
+  updatePrices();
+  renderSignals();
+  renderChart();
+  updateClock();
+  setInterval(updatePrices,30000);
+  setInterval(updateClock,1000);
+  window.addEventListener('resize',renderChart);
+});
+</script>
+</body>
+</html>
