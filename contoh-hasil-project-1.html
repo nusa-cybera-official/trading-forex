@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IKY — NEXARA Community</title>
+<style>
+  /* === IMPORT FONT === */
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap');
+
+  /* === RESET & BASE === */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0e0e0e;
+    --card: #161616;
+    --border: #2a2a2a;
+    --accent: #00ff88;
+    --accent2: #00bfff;
+    --text: #f0f0f0;
+    --muted: #666;
+    --tag-bg: #1e1e1e;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+    overflow-x: hidden;
+  }
+
+  /* === BACKGROUND GRID === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === WRAPPER === */
+  .wrap {
+    max-width: 540px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* === BADGE TOP === */
+  .badge-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,136,.08);
+    border: 1px solid rgba(0,255,136,.2);
+    padding: 5px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* === HERO CARD === */
+  .hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp .6s ease both;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(0,255,136,.3);
+  }
+
+  .hero-info h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+
+  .hero-info h1 span {
+    color: var(--accent);
+  }
+
+  .hero-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .hero-bio {
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.7;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* === SECTION === */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 22px;
+    margin-bottom: 14px;
+    animation: fadeUp .6s ease both;
+  }
+
+  .section:nth-child(2) { animation-delay: .1s; }
+  .section:nth-child(3) { animation-delay: .2s; }
+  .section:nth-child(4) { animation-delay: .3s; }
+  .section:nth-child(5) { animation-delay: .4s; }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* === TABLE === */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .info-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .info-table td {
+    padding: 10px 0;
+    vertical-align: top;
+  }
+
+  .info-table td:first-child {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    width: 110px;
+    flex-shrink: 0;
+  }
+
+  .info-table td:last-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* === SKILL LIST === */
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .skill-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  .skill-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 0;
+    animation: fillBar 1s ease both;
+    animation-delay: .5s;
+  }
+
+  @keyframes fillBar {
+    from { width: 0 !important; }
+  }
+
+  .skill-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 32px;
+    text-align: right;
+  }
+
+  /* === TAGS === */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 1px;
+    transition: all .2s;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* === PROJECT CARD === */
+  .project {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 14px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+
+  .project:hover {
+    border-color: rgba(0,255,136,.3);
+  }
+
+  .project::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+  }
+
+  .project-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .project-tech {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tech-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--accent2);
+    background: rgba(0,191,255,.08);
+    border: 1px solid rgba(0,191,255,.2);
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+
+  /* === CONTACT FORM === */
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .form-input, .form-textarea {
+    width: 100%;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .form-input:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .form-textarea {
+    min-height: 80px;
+    resize: none;
+  }
+
+  .form-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all .2s;
+    margin-top: 4px;
+  }
+
+  .form-btn:hover {
+    background: rgba(0,255,136,.08);
+    box-shadow: 0 0 16px rgba(0,255,136,.15);
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    margin-top: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .footer span {
+    color: var(--accent);
+  }
+
+  /* === COMMENT LABEL === */
+  .code-comment {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- BADGE -->
+  <div class="badge-top">
+    <div class="badge-dot"></div>
+    BELAJAR BERSAMA NX — HASIL PROJECT
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="avatar">👑</div>
+      <div class="hero-info">
+        <h1>Halo, saya <span>IKY!</span></h1>
+        <div class="hero-role">// OWNER & FOUNDER — NEXARA COMMUNITY</div>
+      </div>
+    </div>
+    <div class="hero-bio">
+      Owner & Founder <strong>NEXARA Community</strong>. Web developer yang membangun seluruh ekosistem NEXARA dari nol menggunakan HP Android + Termux. Passionate di bidang cybersecurity & futuristic UI design. 🔥
+    </div>
+  </div>
+
+  <!-- BIODATA -->
+  <div class="section">
+    <div class="section-title">// TENTANG SAYA</div>
+    <div class="code-comment">/* data diri */</div>
+    <table class="info-table">
+      <tr>
+        <td>Nama</td>
+        <td>IKY</td>
+      </tr>
+      <tr>
+        <td>Kota</td>
+        <td>Indonesia 🇮🇩</td>
+      </tr>
+      <tr>
+        <td>Hobi</td>
+        <td>Web Dev, Cyberpunk UI, Mobile Legends, Anime</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>Owner & Developer NEXARA 👑</td>
+      </tr>
+      <tr>
+        <td>Komunitas</td>
+        <td>NEXARA Community</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SKILL -->
+  <div class="section">
+    <div class="section-title">// SKILL SAYA</div>
+    <div class="code-comment">/* progress belajar */</div>
+    <div class="skill-list">
+      <div class="skill-item">
+        <div class="skill-name">HTML</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+        <div class="skill-pct">95%</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">CSS</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+        <div class="skill-pct">90%</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+        <div class="skill-pct">80%</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">PHP/MySQL</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+        <div class="skill-pct">75%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOBI & MINAT -->
+  <div class="section">
+    <div class="section-title">// HOBI & MINAT</div>
+    <div class="code-comment">/* array of interests */</div>
+    <div class="tags">
+      <div class="tag">👑 Owner NEXARA</div>
+      <div class="tag">💻 Web Dev</div>
+      <div class="tag">🛡️ Cybersecurity</div>
+      <div class="tag">🎮 Mobile Legends</div>
+      <div class="tag">📺 Anime</div>
+      <div class="tag">🌐 Termux</div>
+      <div class="tag">🎨 Cyberpunk UI</div>
+      <div class="tag">🚀 PHP & MySQL</div>
+    </div>
+  </div>
+
+  <!-- PROJECT -->
+  <div class="section">
+    <div class="section-title">// PROJECT SAYA</div>
+    <div class="code-comment">/* hasil karya */</div>
+
+    <div class="project">
+      <div class="project-title">NEXARA V4 Platform 🚀</div>
+      <div class="project-desc">
+        Ini adalah website pertama yang saya buat menggunakan HTML.
+        Belajar dari komunitas Belajar Bersama NX di Discord!
+      </div>
+      <div class="project-tech">
+        <span class="tech-tag">HTML</span>
+        <span class="tech-tag">CSS</span>
+        <span class="tech-tag">NEXARA</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-title">NeXaShield Security Gate 🛡️</div>
+      <div class="project-desc">
+        Sistem keamanan siber custom ala Cloudflare yang melindungi
+        seluruh ekosistem platform NEXARA.
+      </div>
+      <div class="project-tech">
+        <span class="tech-tag">HTML</span>
+        <span class="tech-tag">CSS</span>
+        <span class="tech-tag">JavaScript</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KONTAK -->
+  <div class="section">
+    <div class="section-title">// HUBUNGI SAYA</div>
+    <div class="code-comment">/* contact form */</div>
+    <div class="form-group">
+      <label class="form-label">NAMA</label>
+      <input class="form-input" type="text" placeholder="nama kamu...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">PESAN</label>
+      <textarea class="form-textarea" placeholder="tulis pesanmu di sini..."></textarea>
+    </div>
+    <button class="form-btn" onclick="alert('Pesan terkirim! Makasih ya 😄')">
+      KIRIM PESAN →
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>dibuat dengan <span>♥</span> oleh IKY</p>
+    <p style="margin-top:6px;">Owner & Founder of <span>NEXARA</span> Community</p>
+    <p style="margin-top:4px;font-size:9px;">// belajar bersama, tumbuh bersama</p>
+  </div>
+
+</div>
+</body>
+</html>
